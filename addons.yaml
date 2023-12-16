@@ -22,8 +22,14 @@ microk8s-addons:
       supported_architectures:
         - arm64
         - amd64
+    - name: "sb-flux"
+      description: "Flux helm controller"
+      version: "1.0.0"
+      check_status: "deployment.apps/helm-controller"
+      supported_architectures:
+        - arm64
+        - amd64
 
-#TODO: kpack
 #TODO: flux
 #TODO: cluster issuer, clusterstore, default regcreds
 #TODO: shapeblock operator
