@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+import os
+import subprocess
+
+import click
+
+KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
+HELM = os.path.expandvars("$SNAP/microk8s-helm3.wrapper")
+MICROK8S_STATUS = os.path.expandvars("$SNAP/microk8s-status.wrapper")
+MICROK8S_ENABLE = os.path.expandvars("$SNAP/microk8s-enable.wrapper")
+
+@click.command()
+def main(cluster_name, tld, password):
+
+    subprocess.run([HELM, "repo", "add", "shapeblock",
+                   "https://shapeblock.github.io"])
+    subprocess.run([HELM, "repo", "update"])
+    subprocess.run([HELM, "install", "kpack", "shapeblock/kpack", "--create-namespace", "--namespace", "kpack"])
+    click.echo("Enabled Kpack")
+
+if __name__ == "__main__":
+    main()
