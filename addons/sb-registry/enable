@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# addons/python-hello-k8s/enable
+
+import os
+import subprocess
+
+import click
+
+KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
+HELM = os.path.expandvars("$SNAP/microk8s-helm3.wrapper")
+MICROK8S_STATUS = os.path.expandvars("$SNAP/microk8s-status.wrapper")
+MICROK8S_ENABLE = os.path.expandvars("$SNAP/microk8s-enable.wrapper")
+
+def ensure_addon(addon_name: str):
+    click.echo("Checking for addon {}...".format(addon_name))
+    output = subprocess.check_output(
+        [MICROK8S_STATUS, "-a", addon_name]).decode()
+    if "enabled" not in output:
+        p = subprocess.run([MICROK8S_ENABLE, addon_name])
+        if p.returncode != 0:
+            click.echo("Failed to enable addon {}".format(
+                addon_name), err=True)
+            sys.exit(1)
+
+    click.echo("Checking for addon {}... OK".format(addon_name))
+
+@click.command()
+@click.option("--cluster-name", required=True, type=str)
+@click.option("--tld", required=False, default="shapeblockapp.com", type=str)
+@click.option("--password", required=False, default="password", type=str)
+def main(cluster_name, tld, password):
+    ensure_addon("core/ingress")
+    ensure_addon("core/cert-manager")
+    ensure_addon("core/helm3")
+    ensure_addon("core/hostpath-storage")
+
+    subprocess.run([HELM, "repo", "add", "docker-registry",
+                   "https://helm.twun.io/"])
+    subprocess.run([HELM, "repo", "update"])
+    args = []
+    args.extend(["--set", "persistence.enabled=true"])
+    args.extend(["--set", "persistence.size=20Gi"])
+    args.extend(["--set", "ingress.enabled=true"])
+    args.extend(["--set", f"ingress.hosts[0]=registry.{cluster_name}.{tld}"])
+    args.extend(["--set", f"ingress.tls[0].hosts[0]=registry.{cluster_name}.{tld}"])
+    args.extend(["--set", "ingress.tls[0].secretName=registry-tls"])
+    args.extend(["--set", "ingress.annotations.cert-manager.io/cluster-issuer=letsencrypt-prod"])
+    # maybe set ingress class
+    args.extend(["--set", "ingress.annotations.nginx.ingress.kubernetes.io/proxy-body-size=0"])
+    args.extend(["--set", f"secrets.htpasswd={cluster_name}:{password}"])
+    args.extend(["--set", "updateStrategy.type=Recreate"])
+    subprocess.run([HELM, "install", "sb-registry", "docker-registry/docker-registry", *args])
+    click.echo("Enabled SB registry")
+
+if __name__ == "__main__":
+    main()

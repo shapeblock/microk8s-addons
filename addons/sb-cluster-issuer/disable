@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# addons/python-demo-nginx/disable
-
 import click
 import os
 import subprocess
@@ -9,11 +6,11 @@ KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
 
 @click.command()
 def main():
-    click.echo("Disabling python-demo-nginx")
+    click.echo("Disabling cluster issuer")
     subprocess.check_call([
-        KUBECTL, "delete", "deploy", "python-demo-nginx"
+        KUBECTL, "delete", "clusterissuer", "letsencrypt-prod"
     ])
-    click.echo("Disabled python-demo-nginx")
+    click.echo("Disabled cluster issuer")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,39 @@
+import click
+import os
+import subprocess
+
+KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
+
+# Define the cluster_issuer template with a placeholder for email
+cluster_issuer_template = """
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: {}
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-secret-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+"""
+
+@click.command()
+@click.option("--email", required=True, type=str)
+def main(email):
+    click.echo("Creating cluster issuer")
+
+    # Inject the email into the cluster_issuer template
+    cluster_issuer_manifest = cluster_issuer_template.format(email)
+
+    # Use subprocess to apply the modified manifest
+    subprocess.run([KUBECTL, "apply", "-f", "-"], input=cluster_issuer_manifest.encode())
+
+    click.echo("Created clusterissuer")
+
+if __name__ == "__main__":
+    main()
