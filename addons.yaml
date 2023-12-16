@@ -4,12 +4,14 @@ microk8s-addons:
     - name: "sb-cluster-issuer"
       description: "Cluster issuer for cert manager"
       version: "1.0.0"
+      check_status: "clusterissuer/letsencrypt-prod"
       supported_architectures:
         - arm64
         - amd64
     - name: "sb-registry"
       description: "Default container registry for shapeblock"
       version: "1.0.0"
+      check_status: "deployment.apps/sb-registry-docker-registry"
       supported_architectures:
         - arm64
         - amd64
