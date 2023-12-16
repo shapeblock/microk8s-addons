@@ -11,8 +11,7 @@ MICROK8S_STATUS = os.path.expandvars("$SNAP/microk8s-status.wrapper")
 MICROK8S_ENABLE = os.path.expandvars("$SNAP/microk8s-enable.wrapper")
 
 @click.command()
-def main(cluster_name, tld, password):
-
+def main():
     subprocess.run([HELM, "repo", "add", "shapeblock",
                    "https://shapeblock.github.io"])
     subprocess.run([HELM, "repo", "update"])
