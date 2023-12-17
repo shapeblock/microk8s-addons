@@ -1,7 +1,0 @@
-apiVersion: v1
-data:
-  .dockerconfigjson: {"auths":{"$registry_url":{"auth":"$auth"}}}
-kind: Secret
-metadata:
-  name: registry-creds
-type: kubernetes.io/dockerconfigjson

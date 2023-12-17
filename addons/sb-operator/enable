@@ -30,10 +30,12 @@ def main(sb_url, cluster_uuid, registry, username, password):
     click.echo("Created kpack artefacts")
 
     click.echo("Creating registry credentials")
-    regcreds_template = Template(open(f'{current_path}/regcreds.yaml').read())
-    auth = base64.b64encode(f"{username}:{password}".encode()).decode('utf-8')
-    regcreds_manifest = regcreds_template.substitute(registry_url=registry, auth=auth)
-    subprocess.run([KUBECTL, "apply", "-f", "-"], input=regcreds_manifest.encode())
+    subprocess.run([KUBECTL,
+                  "create", "secret", "docker-registry", "registry-creds",
+                  f"--docker-username={username}",
+                  f"--docker-password={password}",
+                  f"--docker-server={registry}"
+                  ])
     click.echo("Created registry credentials")
 
 if __name__ == "__main__":
