@@ -3,6 +3,8 @@
 import click
 import os
 import subprocess
+from pathlib import Path
+
 
 KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
 
@@ -35,6 +37,7 @@ def main(email):
     # Use subprocess to apply the modified manifest
     subprocess.run([KUBECTL, "apply", "-f", "-"], input=cluster_issuer_manifest.encode())
 
+    Path('/var/lock/sb-cluster-issuer.enabled').touch()
     click.echo("Created clusterissuer")
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ microk8s-addons:
     - name: "sb-cluster-issuer"
       description: "Cluster issuer for cert manager"
       version: "1.0.0"
-      check_status: "clusterissuer/letsencrypt-prod"
+      check_status: "/var/lock/sb-cluster-issuer.enabled"
       supported_architectures:
         - arm64
         - amd64

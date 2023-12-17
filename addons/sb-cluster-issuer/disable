@@ -3,6 +3,7 @@
 import click
 import os
 import subprocess
+from pathlib import Path
 
 KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
 
@@ -12,6 +13,7 @@ def main():
     subprocess.check_call([
         KUBECTL, "delete", "clusterissuer", "letsencrypt-prod"
     ])
+    Path('/var/lock/sb-cluster-issuer.enabled').unlink()
     click.echo("Disabled cluster issuer")
 
 if __name__ == "__main__":
