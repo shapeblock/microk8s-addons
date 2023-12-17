@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+
+import click
+import os
+import subprocess
+from string import Template
+import base64
+
+KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
+
+# Define the cluster_issuer template with a placeholder for email
+
+@click.command()
+@click.option("--sb_url", required=True, type=str)
+@click.option("--cluster_uuid", required=True, type=str)
+@click.option("--registry", required=True, type=str)
+@click.option("--username", required=True, type=str)
+@click.option("--password", required=True, type=str)
+def main(sb_url, cluster_uuid, registry, username, password):
+    click.echo("Creating SB operator")
+    sb_operator_template = Template(open('.yaml').read())
+    sb_operator_manifest = sb_operator_template.substitute(sb_url=sb_url, cluster_uuid=cluster_uuid)
+    subprocess.run([KUBECTL, "apply", "-f", "-"], input=sb_operator_manifest.encode())
+    click.echo("Created SB operator")
+
+    click.echo("Creating kpack artefacts")
+    kpack_artefacts = open('kpack_artefacts.yaml').read()
+    subprocess.run([KUBECTL, "apply", "-f", "-"], input=kpack_artefacts.encode())
+    click.echo("Created kpack artefacts")
+
+    click.echo("Creating registry credentials")
+    regcreds_template = Template(open('regcreds.yaml').read())
+    auth = base64.b64encode(f"{username}:{password}".encode()).decode('utf-8')
+    regcreds_manifest = regcreds_template.substitute(registry_url=registry, auth=auth)
+    subprocess.run([KUBECTL, "apply", "-f", "-"], input=regcreds_manifest.encode())
+    click.echo("Created registry credentials")
+
+if __name__ == "__main__":
+    main()

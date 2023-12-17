@@ -1,0 +1,45 @@
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStack
+metadata:
+  name: base
+spec:
+  id: "io.buildpacks.stacks.jammy"
+  buildImage:
+    image: "paketobuildpacks/build-jammy-full"
+  runImage:
+    image: "paketobuildpacks/run-jammy-full"
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: paketo-django
+spec:
+  sources:
+  - image: index.docker.io/paketobuildpacks/python
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: paketo-node
+spec:
+  sources:
+  - image: index.docker.io/paketobuildpacks/nodejs
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: sb-drupal
+spec:
+  sources:
+  - image: index.docker.io/paketobuildpacks/ca-certificates
+  - image: index.docker.io/paketobuildpacks/php-dist
+  - image: index.docker.io/paketobuildpacks/composer
+  - image: registry.gitlab.com/shapeblock-buildpacks/composer-install:0.0.1
+  - image: index.docker.io/paketobuildpacks/nginx
+  - image: index.docker.io/paketobuildpacks/php-fpm
+  - image: registry.gitlab.com/shapeblock-buildpacks/php-nginx:0.0.1
+  - image: index.docker.io/paketobuildpacks/php-start
+  - image: index.docker.io/paketobuildpacks/nodejs
+  - image: index.docker.io/paketobuildpacks/procfile
+  - image: ghcr.io/fagiani/buildpacks/fagiani_apt:0.2.5
+  - image: registry.gitlab.com/shapeblock-buildpacks/chmod:0.0.2
