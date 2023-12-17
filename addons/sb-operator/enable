@@ -11,8 +11,8 @@ KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
 # Define the cluster_issuer template with a placeholder for email
 
 @click.command()
-@click.option("--sb_url", required=True, type=str)
-@click.option("--cluster_uuid", required=True, type=str)
+@click.option("--sb-url", required=True, type=str)
+@click.option("--cluster-uuid", required=True, type=str)
 @click.option("--registry", required=True, type=str)
 @click.option("--username", required=True, type=str)
 @click.option("--password", required=True, type=str)
