@@ -18,7 +18,7 @@ KUBECTL = os.path.expandvars("$SNAP/microk8s-kubectl.wrapper")
 @click.option("--password", required=True, type=str)
 def main(sb_url, cluster_uuid, registry, username, password):
     click.echo("Creating SB operator")
-    sb_operator_template = Template(open('.yaml').read())
+    sb_operator_template = Template(open('sb-operator.yaml').read())
     sb_operator_manifest = sb_operator_template.substitute(sb_url=sb_url, cluster_uuid=cluster_uuid)
     subprocess.run([KUBECTL, "apply", "-f", "-"], input=sb_operator_manifest.encode())
     click.echo("Created SB operator")
