@@ -25,7 +25,7 @@ def main(sb_url, cluster_uuid, registry, username, password):
     click.echo("Created SB operator")
 
     click.echo("Creating kpack artefacts")
-    kpack_artefacts = open(f'{current_path}/kpack_artefacts.yaml').read()
+    kpack_artefacts = open(f'{current_path}/kpack-artefacts.yaml').read()
     subprocess.run([KUBECTL, "apply", "-f", "-"], input=kpack_artefacts.encode())
     click.echo("Created kpack artefacts")
 
