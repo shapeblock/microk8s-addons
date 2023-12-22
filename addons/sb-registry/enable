@@ -45,6 +45,7 @@ def main(cluster_name, tld, password):
     args.extend(["--set", "ingress.tls[0].secretName=registry-tls"])
     args.extend(["--set", "ingress.annotations.cert-manager.io/cluster-issuer=letsencrypt-prod"])
     # maybe set ingress class
+    args.extend(["--set", "ingress.className=public"])
     args.extend(["--set", "ingress.annotations.nginx.ingress.kubernetes.io/proxy-body-size=0"])
     args.extend(["--set", f"secrets.htpasswd={cluster_name}:{password}"])
     args.extend(["--set", "updateStrategy.type=Recreate"])
