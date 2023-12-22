@@ -1,0 +1,20 @@
+persistence:
+  enabled: true
+  size: "20Gi"
+ingress:
+  enabled: true
+  hosts:
+  - "registry.$cluster_name.$tld"
+  tls:
+  - hosts:
+      - "registry.$cluster_name.$tld"
+    secretName: registry-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: 0
+  className: public
+
+secrets:
+  htpasswd: "$cluster_name:$password"
+updateStrategy:
+  type: Recreate

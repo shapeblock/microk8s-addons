@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+from string import Template
 
 import click
 
@@ -36,20 +37,10 @@ def main(cluster_name, tld, password):
     subprocess.run([HELM, "repo", "add", "docker-registry",
                    "https://helm.twun.io/"])
     subprocess.run([HELM, "repo", "update"])
-    args = []
-    args.extend(["--set", "persistence.enabled=true"])
-    args.extend(["--set", "persistence.size=20Gi"])
-    args.extend(["--set", "ingress.enabled=true"])
-    args.extend(["--set", f"ingress.hosts[0]=registry.{cluster_name}.{tld}"])
-    args.extend(["--set", f"ingress.tls[0].hosts[0]=registry.{cluster_name}.{tld}"])
-    args.extend(["--set", "ingress.tls[0].secretName=registry-tls"])
-    args.extend(["--set", 'ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt-prod'])
-    # maybe set ingress class
-    args.extend(["--set", "ingress.className=public"])
-    args.extend(["--set", 'ingress.annotations."nginx\.ingress\.kubernetes\.io/proxy-body-size=0"'])
-    args.extend(["--set", f"secrets.htpasswd={cluster_name}:{password}"])
-    args.extend(["--set", "updateStrategy.type=Recreate"])
-    subprocess.run([HELM, "install", "sb-registry", "docker-registry/docker-registry", *args])
+    current_path = os.path.dirname(os.path.realpath(__file__))
+    registry_values_template = Template(open(f'{current_path}/values.yaml').read())
+    registry_values = registry_values_template.substitute(cluster_name=cluster_name, tld=tld, password=password)
+    subprocess.run([HELM, "install", "sb-registry", "docker-registry/docker-registry", "-f", "-"], input=registry_values.encode())
     click.echo("Enabled SB registry")
 
 if __name__ == "__main__":
