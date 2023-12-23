@@ -13,9 +13,11 @@ MICROK8S_ENABLE = os.path.expandvars("$SNAP/microk8s-enable.wrapper")
 @click.command()
 def main():
     args = []
-    args.extend(["--set", "imageautomationcontroller.create=false"])
-    args.extend(["--set", "imagereflectorcontroller.create=false"])
-    args.extend(["--set", "kustomizecontroller.create=false"])
+    args.extend(["--set", "imageAutomationController.create=false"])
+    args.extend(["--set", "imageReflectionController.create=false"])
+    args.extend(["--set", "kustomizeController.create=false"])
+    args.extend(["--set", "notificationController.create=false"])
+    args.extend(["--set", "sourceController.create=false"])
 
     subprocess.run([HELM, "repo", "add", "flux",
                    "https://fluxcd-community.github.io/helm-charts"])
