@@ -34,6 +34,11 @@ def main(sb_url, cluster_uuid, registry, username, password):
     subprocess.run([KUBECTL, "apply", "-f", "-"], input=helm_repository.encode())
     click.echo("Created Helm repository")
 
+    click.echo("Creating Bitnami repository")
+    bitnami_repository = open(f'{current_path}/bitnami-repository.yaml').read()
+    subprocess.run([KUBECTL, "apply", "-f", "-"], input=bitnami_repository.encode())
+    click.echo("Created Bitnami repository")
+
     click.echo("Creating registry credentials")
     subprocess.run([KUBECTL,
                   "create", "secret", "docker-registry", "registry-creds",
