@@ -17,7 +17,6 @@ def main():
     args.extend(["--set", "imageReflectionController.create=false"])
     args.extend(["--set", "kustomizeController.create=false"])
     args.extend(["--set", "notificationController.create=false"])
-    args.extend(["--set", "sourceController.create=false"])
 
     subprocess.run([HELM, "repo", "add", "flux",
                    "https://fluxcd-community.github.io/helm-charts"])
