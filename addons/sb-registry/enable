@@ -33,6 +33,7 @@ def main(cluster_name, tld, password):
     ensure_addon("core/cert-manager")
     ensure_addon("core/helm3")
     ensure_addon("core/hostpath-storage")
+    ensure_addon("community/nfs")
 
     subprocess.run([HELM, "repo", "add", "docker-registry",
                    "https://helm.twun.io/"])
