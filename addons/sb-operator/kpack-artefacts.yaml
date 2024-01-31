@@ -16,6 +16,7 @@ metadata:
 spec:
   sources:
   - image: index.docker.io/paketobuildpacks/python
+  - image: index.docker.io/paketobuildpacks/nodejs
 ---
 apiVersion: kpack.io/v1alpha2
 kind: ClusterStore
