@@ -186,7 +186,7 @@ spec:
       serviceAccountName: sb-admin
       containers:
       - name: sb-operator
-        image: shapeblock/sb-operator:31-jan-2024-10.33
+        image: shapeblock/sb-operator:07-feb-2024-06.00
         imagePullPolicy: Always
         env:
           - name: SB_URL

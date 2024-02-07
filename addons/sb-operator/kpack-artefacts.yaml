@@ -17,6 +17,7 @@ spec:
   sources:
   - image: index.docker.io/paketobuildpacks/python
   - image: index.docker.io/paketobuildpacks/nodejs
+  - image: index.docker.io/shapeblock/chmod:0.0.5
 ---
 apiVersion: kpack.io/v1alpha2
 kind: ClusterStore
@@ -25,6 +26,7 @@ metadata:
 spec:
   sources:
   - image: index.docker.io/paketobuildpacks/nodejs
+  - image: index.docker.io/shapeblock/chmod:0.0.5
 ---
 apiVersion: kpack.io/v1alpha2
 kind: ClusterStore
@@ -43,7 +45,7 @@ spec:
   - image: index.docker.io/paketobuildpacks/nodejs
   - image: index.docker.io/paketobuildpacks/procfile
   - image: ghcr.io/fagiani/buildpacks/fagiani_apt:0.2.5
-  - image: registry.gitlab.com/shapeblock-buildpacks/chmod:0.0.2
+  - image: index.docker.io/shapeblock/chmod:0.0.5
 ---
 apiVersion: kpack.io/v1alpha2
 kind: ClusterStore
@@ -52,3 +54,14 @@ metadata:
 spec:
   sources:
   - image: index.docker.io/paketobuildpacks/web-servers
+  - image: index.docker.io/shapeblock/chmod:0.0.5
+---
+apiVersion: kpack.io/v1alpha2
+kind: ClusterStore
+metadata:
+  name: paketo-rails
+spec:
+  sources:
+  - image: index.docker.io/paketobuildpacks/ruby
+  - image: index.docker.io/paketobuildpacks/nodejs
+  - image: index.docker.io/shapeblock/chmod:0.0.5
