@@ -35,7 +35,9 @@ def main(email):
     cluster_issuer_manifest = cluster_issuer_template.format(email)
 
     # Use subprocess to apply the modified manifest
-    subprocess.run([KUBECTL, "apply", "-f", "-"], input=cluster_issuer_manifest.encode())
+    result = subprocess.run([KUBECTL, "apply", "-f", "-"],  capture_output = True, input=cluster_issuer_manifest.encode())
+    click.echo(result.stdout.decode('utf-8'))
+    click.echo(result.stderr.decode('utf-8'))
 
     Path('/var/lock/sb-cluster-issuer.enabled').touch()
     click.echo("Created clusterissuer")
